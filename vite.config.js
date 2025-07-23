@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/drive_receipt_upload/',
+  base: '/ocr_invoice_upload/',
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
@@ -15,7 +15,7 @@ export default defineConfig({
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/drive_receipt_upload/',
+        start_url: '/ocr_invoice_upload/',
         icons: [
           {
             src: '/icons/icon-192.png',

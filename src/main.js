@@ -1,7 +1,8 @@
 import { initCamera, capturePhoto } from './camera.js'
-import { processOCR } from './ocr.js'
+import { processOCR, extractAmounts } from './ocr.js'
 import { shareFile } from './share.js'
 import { buildFileName } from './utils.js'
+import { showAmountDialog, showItemDialog } from './dialog.js'
 
 const elements = {
   video: document.getElementById('camera-video'),
@@ -76,13 +77,32 @@ async function handleCapture() {
     elements.output.classList.add('active')
     elements.outputText.textContent = text
     
-    // Build filename and share
-    const fileName = buildFileName(text)
-    const file = new File([blob], fileName, { type: 'image/jpeg' })
+    // Extract amounts from OCR text
+    const amounts = extractAmounts(text)
     
-    const shared = await shareFile(file, fileName)
-    if (!shared) {
-      showError('共有に失敗しました。手動でダウンロードしてください。')
+    if (amounts.length === 0) {
+      // No amounts found, share with date only
+      const fileName = buildFileName()
+      const file = new File([blob], fileName, { type: 'image/jpeg' })
+      await shareWithGoogleDrive(file)
+    } else {
+      // Show amount selection dialog
+      showAmountDialog(amounts, async (selectedAmount) => {
+        if (selectedAmount === null) {
+          // User selected "none of the above"
+          const fileName = buildFileName()
+          const file = new File([blob], fileName, { type: 'image/jpeg' })
+          await shareWithGoogleDrive(file)
+        } else {
+          // Show item selection dialog
+          showItemDialog(async (selectedItem) => {
+            // Build filename with amount and item
+            const fileName = buildFileName(selectedAmount, selectedItem)
+            const file = new File([blob], fileName, { type: 'image/jpeg' })
+            await shareWithGoogleDrive(file)
+          })
+        }
+      })
     }
     
   } catch (err) {
@@ -90,6 +110,13 @@ async function handleCapture() {
     console.error('Capture error:', err)
   } finally {
     elements.captureBtn.disabled = false
+  }
+}
+
+async function shareWithGoogleDrive(file) {
+  const shared = await shareFile(file, file.name)
+  if (!shared) {
+    showError('共有に失敗しました。手動でダウンロードしてください。')
   }
 }
 
