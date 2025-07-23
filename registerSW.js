@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/ocr_invoice_upload/sw.js', { scope: '/ocr_invoice_upload/' })})}
