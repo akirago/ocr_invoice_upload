@@ -69,7 +69,8 @@
 
     .controls {
       display: flex;
-      gap: 1rem;
+      flex-direction: column;
+      gap: 0.75rem;
       margin: 1rem 0;
     }
 
@@ -100,6 +101,16 @@
     .btn-primary:disabled {
       background: #ccc;
       cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #4285f4;
+      border: 2px solid #4285f4;
+    }
+
+    .btn-secondary:hover {
+      background: #e3f2fd;
     }
 
     .progress-container {
@@ -361,7 +372,7 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/ocr_invoice_upload/assets/index-B9B0RGni.js"></script>
+  <script type="module" crossorigin src="/ocr_invoice_upload/assets/index-Dzi8M4XL.js"></script>
 <link rel="manifest" href="/ocr_invoice_upload/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/ocr_invoice_upload/registerSW.js"></script></head>
 <body>
   <header>
@@ -381,6 +392,10 @@
       <button id="capture-btn" class="btn-primary" disabled>
         📸 撮影
       </button>
+      <button id="upload-btn" class="btn-secondary">
+        📁 画像をアップロード
+      </button>
+      <input type="file" id="file-input" accept="image/*" style="display: none;">
     </div>
 
     <div class="progress-container" id="progress-container">
